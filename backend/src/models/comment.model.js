@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref:"Post"
     },
-    contetn: {
+    content: {
       type: String,
       required:true,
       maxLength: 280,

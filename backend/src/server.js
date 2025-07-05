@@ -5,6 +5,7 @@ import {clerkMiddleware} from "@clerk/express"
 
 import userRoute from "./routes/user.route.js"
 import postRoute from "./routes/post.route.js"
+import commentRoute from "./routes/comment.route.js"
 
 
 
@@ -21,6 +22,15 @@ app.get("/", (req, res) => res.send("hello testing"));
 
 app.use("api/users",userRoute)
 app.use("api/post",postRoute)
+app.use("api/comment",commentRoute)
+
+
+// error hanlding midldeware
+
+app.use((error,req,res,next)=>{
+  console.log("Unhandled error", error)
+  res.status(500).json({error:"Internal server Error"})
+})
 
 const startServer = async () => {
   try {
