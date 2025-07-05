@@ -9,9 +9,8 @@ import notification from '../models/notification.model.js';
 export const getComments = asyncHandler(async(req,res)=>{
   const {postId} = req.params;
 
-  const comments = await Comments.find({post:postId}).sort({createdAta:-1}).populate("User","username firstName lastName profilePicture")
-  if(!comments) return res.status(404).json({message : "No comments are found !"});
-
+ const comments = await Comments.find({post:postId}).sort({createdAt:-1}).populate("user","username firstName lastName profilePicture")
+if(!comments || comments.length === 0) return res.status(404).json({message : "No comments are found !"});
   res.status(200).json({comments})
 
 
