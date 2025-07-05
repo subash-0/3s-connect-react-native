@@ -4,6 +4,7 @@ import {clerkMiddleware} from "@clerk/express"
 
 
 import userRoute from "./routes/user.route.js"
+import postRoute from "./routes/post.route.js"
 
 
 
@@ -19,6 +20,8 @@ app.use(clerkMiddleware())
 app.get("/", (req, res) => res.send("hello testing"));
 
 app.use("api/users",userRoute)
+app.use("api/post",postRoute)
+
 const startServer = async () => {
   try {
     await connectDb();
