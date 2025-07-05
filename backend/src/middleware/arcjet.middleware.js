@@ -7,12 +7,13 @@ export const arcjetMiddleware =async (req,res,next)=>{
     requested:1
   });
   if(decision.isDenied){
-    if(decision.reason.isRateLimit()){
+    const reason = decision.results[0].reason
+    if(reason.isRateLimit()){
       return res.status(429).json({
         error:"Too Many requests",
         message:"Rate Limit exceeds, please try again later"
       })
-    } else if(decision.reason.isBot()){
+    } else if(reason.isBot()){
       return res.status(403).json({
         error:"Bot access is denied",
         message:"Automated Requests are not allowed"
