@@ -1,12 +1,22 @@
-import { Text, View } from "react-native";
-import {Ionicons} from "@expo/vector-icons"
 
-export default function Index() {
+import { useClerk } from '@clerk/clerk-expo'
+import React from 'react'
+import { Button, Text, View } from 'react-native'
+
+type Props = {}
+
+const HomeScreen = (props: Props) => {
+  const {signOut} = useClerk()
   return (
-    <View
-     className="flex-1 justify-center items-center bg-white"
-    >
-      <Text className="text-xl font-bold text-blue-500">Welcom to expo</Text>
-    </View>
-  );
+    <View>
+      <Text> HomeScreen</Text>
+      
+       <Button
+       onPress={()=>signOut()}
+        title='Sign Out' />
+      </View>
+   
+  )
 }
+
+export default HomeScreen
