@@ -10,7 +10,7 @@ export const createAPIClient = (getToken: () => Promise<string | null>): AxiosIn
 
   api.interceptors.request.use(async (config) => {
     const token = await getToken();
-    console.info("token",token)
+    
     if (token) {
       config.headers.Authorization = token.startsWith("Bearer ")
         ? token
@@ -44,7 +44,7 @@ export const useApiClient = () :AxiosInstance =>{
 
 
 export const userApi = {
-  syncUser: (api:AxiosInstance)=> api.post("/users/sync"),
-  getCurrentUser :(api: AxiosInstance)=> api.get("/user/me"),
-  updateProfile:(api:AxiosInstance, data:any)=> api.put("/user/profile",data)
+  syncUser: ( api:AxiosInstance)=> api.post("/users/sync"),
+  getCurrentUser :(api: AxiosInstance)=> api.get("/users/me"),
+  updateProfile:(api:AxiosInstance, data:any)=> api.put("/users/profile",data)
 }
