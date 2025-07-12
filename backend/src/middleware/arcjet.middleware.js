@@ -8,6 +8,7 @@ export const arcjetMiddleware = async (req, res, next) => {
       requested: 1, // each request consumes 1 token
     });
 
+    
     // handle denied requests
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {

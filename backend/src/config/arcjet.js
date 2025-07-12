@@ -12,7 +12,7 @@ export const aj = arcjet({
       mode: "LIVE",
       allow: [
         "CATEGORY:SEARCH_ENGINE",
-        "VERCEL_MONITOR_PREVIEW",   // <‑‑ add this line
+        "VERCEL_MONITOR_PREVIEW", 
       ],
     }),
 
