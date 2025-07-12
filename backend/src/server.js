@@ -38,6 +38,10 @@ const ensureDbConnected = async () => {
   }
 };
 
+// app.listen(ENV.PORT, () =>
+//       console.log(`✔  Server running at http://localhost:${ENV.PORT}`)
+//     );
+
 export default async function handler(req, res) {
   await ensureDbConnected();
   return app(req, res);

@@ -11,7 +11,7 @@ router.get("/profile/:username",getUserProgile)
 router.put("/profile", protectRoute, updateUserProfile);
 
 router.post("/sync",protectRoute, sysncUser)
-router.post("/me",protectRoute, getCurrentUser)
+router.get("/me",protectRoute, getCurrentUser)
 router.post("/follow/:targetUserId",protectRoute, followUser)
 
 export default router;
