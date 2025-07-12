@@ -10,16 +10,16 @@ export const aj = arcjet({
     // ✅ Bot detection — allow search engines *and* Vercel’s preview bot
     detectBot({
       mode: "LIVE",
-       allow: [
-    "CATEGORY:SEARCH_ENGINE",
-    "VERCEL_MONITOR_PREVIEW",
-    "CATEGORY:VERCEL",
-    "IP:127.0.0.1",         // allow localhost (IPv4)
-    "IP:::1",               // allow localhost (IPv6)
-    "USER_AGENT:PostmanRuntime", // Postman
-    "USER_AGENT:curl",           // curl
-   
-  ],
+      allow: [
+        "CATEGORY:SEARCH_ENGINE", // Allow Google, Bing, etc.
+        "CATEGORY:VERCEL", // Allow Vercel preview bots
+        "CATEGORY:PROGRAMMATIC", // Allow axios, fetch, etc.
+        "CATEGORY:TOOL", // Allow curl, Postman, etc.
+        "IP:127.0.0.1", // localhost (IPv4)
+        "IP:::1", // localhost (IPv6)
+        "IP:10.0.2.2", // Android emulator -> host
+        "CIDR:192.168.0.0/16", // Entire local network (your dev machine IP too)
+      ],
     }),
 
     tokenBucket({
