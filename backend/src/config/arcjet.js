@@ -1,30 +1,26 @@
 import arcjet, { tokenBucket, shield, detectBot } from "@arcjet/node";
 import { ENV } from "./env.js";
 
-// initialize Arcjet with security rules
 export const aj = arcjet({
   key: ENV.ARCJET_KEY,
   characteristics: ["ip.src"],
   rules: [
-    // shield protects your app from common attacks e.g. SQL injection, XSS, CSRF attacks
     shield({ mode: "LIVE" }),
 
-    // bot detection - block all bots except search engines
+    // ✅ Bot detection — allow search engines *and* Vercel’s preview bot
     detectBot({
       mode: "LIVE",
       allow: [
         "CATEGORY:SEARCH_ENGINE",
-        // allow legitimate search engine bots
-        // see full list at https://arcjet.com/bot-list
+        "VERCEL_MONITOR_PREVIEW",   // <‑‑ add this line
       ],
     }),
 
-    // rate limiting with token bucket algorithm
     tokenBucket({
       mode: "LIVE",
-      refillRate: 30, // tokens added per interval
-      interval: 20, // interval in seconds (10 seconds)
-      capacity: 40, // maximum tokens in bucket
+      refillRate: 30,
+      interval: 20,
+      capacity: 40,
     }),
   ],
 });
