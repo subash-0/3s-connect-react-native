@@ -2,7 +2,7 @@ import axios,{AxiosInstance} from "axios"
 import { useAuth } from '@clerk/clerk-expo';
 
 
-const API_BASE_URL = "https://3sconnect.vercel.app/api/";
+const API_BASE_URL = "https://3sconnect.vercel.app/api";
 
 
 export const createAPIClient = (getToken: () => Promise<string | null>): AxiosInstance => {

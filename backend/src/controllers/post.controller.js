@@ -60,43 +60,41 @@ export const createPost = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const imageFile = req.file;
 
-  if (!content && !imageFile) {
-    return res.status(400).json({ error: "Post must contain either text or image" });
-  }
+  if (!content && !imageFile)
+    return res.status(400).json({ error: "Post must have text or image" });
 
-  const user = await User.findOne({ clerkId: userId });
-  if (!user) return res.status(404).json({ error: "User not found" });
+  const user = await User.findOne({ clerkID: userId });
+  if (!user) return res.status(404).json({ error: "User not found !" });
 
   let imageUrl = "";
 
-  // upload image to Cloudinary if provided
   if (imageFile) {
     try {
-      // convert buffer to base64 for cloudinary
-      const base64Image = `data:${imageFile.mimetype};base64,${imageFile.buffer.toString(
-        "base64"
-      )}`;
+      // build base64 data‑URI
+      const base64Image = `data:${imageFile.mimetype};base64,${imageFile.buffer.toString("base64")}`;
 
       const uploadResponse = await cloudinary.uploader.upload(base64Image, {
-        folder: "social_media_posts",
+        folder: "3sConnect_posts",
         resource_type: "image",
         transformation: [
           { width: 800, height: 600, crop: "limit" },
-          { quality: "auto" },
-          { format: "auto" },
+          { quality: "auto" },      // q_auto
+          { fetch_format: "auto" }, // f_auto
         ],
       });
+
       imageUrl = uploadResponse.secure_url;
-    } catch (uploadError) {
-      console.error("Cloudinary upload error:", uploadError);
-      return res.status(400).json({ error: "Failed to upload image" });
+    } catch (error) {
+      return res.status(400).json({
+        error: error?.message || "Failed to upload file to Cloudinary",
+      });
     }
   }
 
   const post = await Post.create({
-    user: user._id,
     content: content || "",
     image: imageUrl,
+    user: user._id,
   });
 
   res.status(201).json({ post });
