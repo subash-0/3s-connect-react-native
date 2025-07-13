@@ -14,7 +14,7 @@ router.get("/user/:username", getUserbasedPosts)
 
 //protectedRoutes
 
-router.post("/", protectRoute,upload.single("image/"),createPost);
+router.post("/", protectRoute,upload.single("image"),createPost);
 router.post("/:postId/like",protectRoute,likeAPost)
 router.delete("/:postId", protectRoute,deletePost);
 

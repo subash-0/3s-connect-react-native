@@ -60,7 +60,7 @@ export const createPost = asyncHandler(async (req, res) => {
   const { content } = req.body;
   const imageFile = req.file;
 
-  if (!content || !ima)
+  if (!content || !imageFile)
     return res.status(400).json({ error: "Post must have text or image" });
 
   const user = await User.findOne({ clerkID: userId });

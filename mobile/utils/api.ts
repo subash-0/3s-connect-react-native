@@ -2,7 +2,7 @@ import axios,{AxiosInstance} from "axios"
 import { useAuth } from '@clerk/clerk-expo';
 
 
-const API_BASE_URL = "https://3sconnect.vercel.app/api/";
+const API_BASE_URL = "http://localhost:5001/api/";
 
 
 export const createAPIClient = (getToken: () => Promise<string | null>): AxiosInstance => {
@@ -10,7 +10,8 @@ export const createAPIClient = (getToken: () => Promise<string | null>): AxiosIn
 
   api.interceptors.request.use(async (config) => {
     const token = await getToken();
-    
+   
+   
     if (token) {
       config.headers.Authorization = token.startsWith("Bearer ")
         ? token
