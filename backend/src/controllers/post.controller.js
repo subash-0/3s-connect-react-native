@@ -6,19 +6,24 @@ import Comment from "../models/comment.model.js";
 import { getAuth } from "@clerk/express";
 import cloudinary from "../config/cloudinary.js";
 
+// controllers/post.controller.js
 export const getPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
     .sort({ createdAt: -1 })
-    .populate("user", "username firstName lastName profilePicture")
+    // populates post.user  ↓ field name matches schema ("user")
+    .populate('user', 'username firstName lastName profilePicture')
+    // populates comment.user
     .populate({
-      path: "comments",
+      path: 'comments',
       populate: {
-        path: "user",
-        select: "username firstName lastName profilePicture",
+        path: 'user', // ← lower‑case, singular
+        select: 'username firstName lastName profilePicture',
       },
     });
-  res.status(200).json({ posts });
+
+  res.status(200).json( posts );
 });
+
 
 export const getSinglePost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
