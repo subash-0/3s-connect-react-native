@@ -5,9 +5,9 @@ const postSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      unique: true,
+      
     },
-    contetn: {
+    content: {
       type: String,
       maxLength: 280,
     },
