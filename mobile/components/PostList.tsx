@@ -8,7 +8,7 @@ import PostCard from './PostCard';
 const PostList = () => {
   const {currentUser} = useCurrentUser();
   const {posts, isLoading, error ,refetch, toggleLike, deletePost, checkIsLiked} = usePosts();
-  
+
   if(isLoading){
     return(
       <View className='p-8 items-center'>
@@ -40,9 +40,9 @@ const PostList = () => {
   return (
     <>
      {
-      posts.map((post:Post)=>(
+      posts.map((post:Post, index:number)=>(
         <PostCard
-        key={post._id}
+        key={index}
         post={post}
         onLike = {toggleLike}
         onDelete = {deletePost}

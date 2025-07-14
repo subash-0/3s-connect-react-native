@@ -12,7 +12,7 @@ export const useCurrentUser = () => {
   } = useQuery({
     queryKey: ["authUser"],
     queryFn: () => userApi.getCurrentUser(api),
-    select: (response) => response.data.user,
+    select: (response) => response.data.user[0],
   });
 
   return { currentUser, isLoading, error, refetch };

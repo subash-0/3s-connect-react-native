@@ -15,7 +15,7 @@ export const usePosts = () => {
   }= useQuery({
     queryKey:["posts"],
     queryFn:()=>postApi.getPosts(api),
-    select:(response)=> response.data.posts
+    select:(response)=> response.data
 
   });
 

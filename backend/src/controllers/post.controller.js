@@ -106,27 +106,25 @@ export const createPost = asyncHandler(async (req, res) => {
   res.status(201).json({ post });
 });
 
+
 export const likeAPost = asyncHandler(async (req, res) => {
-  const { userId } = getAuth();
-  const { postId } = req.params;;
-  const user = User.findOne({ clerkID: userId });
+  const { userId } = getAuth(req);   // ← pass req
+  const { postId } = req.params;
+
+  const user = await User.findOne({ clerkID: userId });
   const post = await Post.findById(postId);
-  if (!user || post)
-    return res.statusZ(404).json({ error: "Post or User not found !" });
 
-  const isLiked = post.likes.includes(user._id);
+  if (!user || !post)
+    return res.status(404).json({ error: "Post or User not found!" });
 
-  if (isLiked) {
-    await Post.findByIdAndUpdate(postId, {
-      $pull: { likes: user._id },
-    });
-  } else {
-    await Post.findByIdAndUpdate(postId, {
-      $push: { likes: user._id },
-    });
-  }
+  const isLiked = post.likes.some(id => id.equals(user._id));
 
-  if (post.user.toString() !== user._id.toString()) {
+  await Post.findByIdAndUpdate(
+    postId,
+    isLiked ? { $pull: { likes: user._id } } : { $push: { likes: user._id } }
+  );
+
+  if (!post.user.equals(user._id)) {
     await Notification.create({
       from: user._id,
       to: post.user,
@@ -134,10 +132,10 @@ export const likeAPost = asyncHandler(async (req, res) => {
       post: postId,
     });
   }
+
   res.status(200).json({
-    message: isLiked
-      ? "Post unliked succesfully !"
-      : "Post liked successfully !",
+    message: isLiked ? "Post unliked successfully!" : "Post liked successfully!",
+    
   });
 });
 
@@ -153,7 +151,7 @@ export const deletePost = asyncHandler(async (req, res) => {
     return res
       .status(403)
       .json({ error: "You can only delete your own post !" });
-  await Comment.deleteMany(postId);
+  await Comment.deleteMany({post:postId});
   await Post.findByIdAndDelete(postId);
 
   res.status(201).json({ message: "Post deleted Successfully !" });

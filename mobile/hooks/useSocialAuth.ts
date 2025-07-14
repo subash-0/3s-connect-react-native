@@ -17,7 +17,6 @@ export const useSocialAuth = () =>{
         }
       
     } catch (error) {
-      console.log(error)
       const provider = strategy === "oauth_github" ? "Github" : "Google"
       Alert.alert("Error", `Failed to sign in with ${provider}. Please try again later !`)
       
