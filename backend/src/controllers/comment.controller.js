@@ -18,40 +18,49 @@ export const getComments = asyncHandler(async(req,res)=>{
 })
 
 
-export const createComment = asyncHandler(async(req,res)=>{
-  const {postId}= req.params;
-  const {content}= req.body;
-  const {userId} = getAuth(req);
+export const createComment = asyncHandler(async (req, res) => {
+  const { postId } = req.params;
+  const { content } = req.body;
+  const { userId } = getAuth(req);           // <- use the logged‑in Clerk user
 
-  if(!content || content.trim() === "") return res.status(400).json({error:"Comment is required !"});
+  if (!content?.trim())
+    return res.status(400).json({ error: "Comment content is required!" });
 
-   const user = await User.findOne({clerkID:userId});
-   const post = await Posts.findById(postId);
+  // Find the real user
+  const user = await User.findOne({ clerkID: userId }); // ← use userId, not a hard‑coded string
+  const post = await Posts.findById(postId);
 
-   if(!user || !post) return res.status(404).json({error:"Either Post or User not found !"});
-   const comment  = await Comments.create({
+  if (!user || !post)
+    return res.status(404).json({ error: "Either post or user not found!" });
+
+  // Create comment
+  const comment = await Comments.create({
     user: user._id,
-    content,
+    content: content.trim(),
     post: post._id,
-   })
+  });
 
-   if(!comment) res.status(400).json({error:"Something went wrong !"});
-   await Posts.findByIdAndUpdate(postId,{
-    $push: {comments: comment._id}
-   })
+  // Attach comment reference to the post
+  await Posts.findByIdAndUpdate(
+    postId,
+    { $push: { comments: comment._id } },
+    { new: true }
+  );
 
-   if(post.user.toString() !== user._id.toString()){
+  // Notify post owner (skip self‑notifications)
+  if (!post.user.equals(user._id)) {
     await notification.create({
       from: user._id,
-      to:post.user,
-      post:postId,
-      comment:comment._id
-    })
-   }
+      to: post.user,
+      post: post._id,
+      comment:comment._id,
+      types:"comment"
+    });
+  }
 
-   res.status(200).json({comment})
+  return res.status(201).json({ comment });
+});
 
-})
 
 export const deleteComment = asyncHandler(async(req,res)=>{
   const {userId} = getAuth(req);
