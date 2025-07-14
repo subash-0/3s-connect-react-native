@@ -1,13 +1,17 @@
 import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import { usePosts } from '@/hooks/usePost';
 import { Post } from '@/types';
 import PostCard from './PostCard';
+import CommentModel from './CommentModel';
 
 const PostList = () => {
   const {currentUser} = useCurrentUser();
+  const [selectedPostId, setSelectedPostId] = useState<string|null>(null)
   const {posts, isLoading, error ,refetch, toggleLike, deletePost, checkIsLiked} = usePosts();
+
+  const selectedPost = selectedPostId ? posts?.find((post:Post)=>post._id === selectedPostId) : null
 
   if(isLoading){
     return(
@@ -46,6 +50,7 @@ const PostList = () => {
         post={post}
         onLike = {toggleLike}
         onDelete = {deletePost}
+        onComment = {(post:Post)=> setSelectedPostId(post._id)}
         currentUser= {currentUser}
         isLiked = {checkIsLiked(post.likes, currentUser)}
 
@@ -53,6 +58,8 @@ const PostList = () => {
         />
       ))
      }
+
+     <CommentModel selectedPost = {selectedPost} onClose ={()=> setSelectedPostId(null)}/>
     </>
   )
 }
