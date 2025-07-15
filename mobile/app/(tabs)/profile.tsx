@@ -19,10 +19,13 @@ import { formatDate } from "@/utils/formatter";
 import { format } from "date-fns";
 import { usePosts } from "@/hooks/usePost";
 import PostList from "@/components/PostList";
+import { useProfile } from "@/hooks/useProfile";
+import EditProfileModal from "@/components/EditProfileModal";
 
 const ProfileScreen = () => {
   const { isLoading, currentUser } = useCurrentUser();
-const {isLoading:loadingPosts,refetch, posts:userPosts}= usePosts(currentUser.username);
+const {isLoading:loadingPosts,refetch:refetchingPost, posts:userPosts}= usePosts(currentUser.username);
+const {isEditModalVisible,isUpdating,formData, openEditModal,closeEditModal, saveProfile,updateFormField,refetch} = useProfile();
   const insets = useSafeAreaInsets();
   
   if (isLoading) {
@@ -50,7 +53,7 @@ const {isLoading:loadingPosts,refetch, posts:userPosts}= usePosts(currentUser.us
         contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={loadingPosts} onRefresh={refetch}/>
+          <RefreshControl refreshing={loadingPosts} onRefresh={refetchingPost}/>
         }
       >
         <Image
@@ -68,7 +71,9 @@ const {isLoading:loadingPosts,refetch, posts:userPosts}= usePosts(currentUser.us
               source={{ uri: currentUser.profilePicture }}
               className="size-32 rounded-full border-4 border-white"
             />
-            <TouchableOpacity className="border border-gray-300 px-6 py-2 rounded-full">
+            <TouchableOpacity className="border border-gray-300 px-6 py-2 rounded-full"
+            onPress={openEditModal}
+            >
               <Text className="font-semibold text-gray-900">Edit Profile</Text>
             </TouchableOpacity>
           </View>
@@ -109,6 +114,16 @@ const {isLoading:loadingPosts,refetch, posts:userPosts}= usePosts(currentUser.us
         </View>
         <PostList username={currentUser?.username} />
       </ScrollView>
+
+      <EditProfileModal
+      isVisible = {isEditModalVisible}
+      onClose = {closeEditModal}
+      formData = {formData}
+      saveProfile = {saveProfile}
+      updateFormField = {updateFormField}
+      isUpdating = {isUpdating}
+      
+      />
     </SafeAreaView>
   );
 };
