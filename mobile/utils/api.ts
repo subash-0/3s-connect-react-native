@@ -52,7 +52,7 @@ export const postApi = {
     api.post("/post", data),
   getPosts: (api: AxiosInstance) => api.get("/post"),
   getUserPost: (api: AxiosInstance, username: string) =>
-    api.get(`/posts/user/${username}`),
+    api.get(`/post/user/${username}`),
   likePost: (api: AxiosInstance, postId: string) =>
     api.post(`/post/${postId}/like`),
   deletePost: (api: AxiosInstance, postId: string) =>
