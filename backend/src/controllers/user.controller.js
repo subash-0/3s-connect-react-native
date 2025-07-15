@@ -14,13 +14,19 @@ export const getUserProgile = asyncHandler(async(req,res)=>{
 
 })
 
-export const updateUserProfile = asyncHandler(async(req,res)=>{
+export const updateUserProfile = asyncHandler(async (req, res) => {
+  const { firstName, lastName, bio, location } = req.body;
+  const { userId } = getAuth(req);         // whatever auth gives you
 
-  const {userId} = getAuth(req);
-  const user = await userModel.findByIdAndUpdate({clerkID:userId},req.body, {new:true})
-  if(!user) return res.status(404).json({error:"User not found"})
-    res.status(200).json({user})
-})
+  const user = await userModel.findOneAndUpdate(
+    { clerkID: userId },                   // or whatever your auth ID is
+    { firstName, lastName, bio, location },
+    { new: true }                          // return the updated doc
+  );
+
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.status(200).json({ user });
+});
 
 export const sysncUser = asyncHandler(async(req,res)=>{
   const {userId} = getAuth(req);
