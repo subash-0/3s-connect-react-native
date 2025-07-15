@@ -57,7 +57,7 @@ export const useProfile = () =>{
     saveProfile:()=> updateProfileMutation.mutate(formData),
     updateFormField,
     isUpdating : updateProfileMutation.isPending,
-    refetch: queryClient.invalidateQueries({queryKey:["authUser"]})
+    refetch:  () => queryClient.invalidateQueries({queryKey:["authUser"]})
   }
 
 }
