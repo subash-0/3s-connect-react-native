@@ -6,10 +6,10 @@ import { Post } from '@/types';
 import PostCard from './PostCard';
 import CommentModel from './CommentModel';
 
-const PostList = () => {
+const PostList = ({username}:{username?:string}) => {
   const {currentUser} = useCurrentUser();
   const [selectedPostId, setSelectedPostId] = useState<string|null>(null)
-  const {posts, isLoading, error ,refetch, toggleLike, deletePost, checkIsLiked} = usePosts();
+  const {posts, isLoading, error ,refetch, toggleLike, deletePost, checkIsLiked} = usePosts(username);
 
   const selectedPost = selectedPostId ? posts?.find((post:Post)=>post._id === selectedPostId) : null
 
