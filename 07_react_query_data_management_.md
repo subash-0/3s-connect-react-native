@@ -374,6 +374,4 @@ In this chapter, we've explored **React Query Data Management**, the "smart assi
 
 Now that our frontend knows how to beautifully manage data, let's explore how we handle the visual side of things.
 
-[Next Chapter: (Placeholder for next chapter, replace with actual next chapter name)](next_chapter_filename.md)
-
 ---
