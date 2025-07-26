@@ -126,23 +126,21 @@ Let's visualize the journey of a "Create Post" request from the mobile app to it
 
 ```mermaid
 sequenceDiagram
-    participant Mobile App as MA
-    participant Backend Server as server.js
-    participant Post Routes as post.route.js
-    participant Protect Route as Auth Middleware
-    participant Upload Image as Multer Middleware
-    participant Create Post as createPost Controller
+    participant MA as Mobile App
+    participant Server as Express Server
+    participant Auth as Auth Middleware
+    participant Multer as Multer Middleware
+    participant Controller as Create Post Controller
 
-    MA->>Backend Server: POST /api/post (with text and image)
-    Backend Server->>Post Routes: "Request starts with /api/post, hand it over!"
-    Post Routes->>Protect Route: "Is user logged in?"
-    Protect Route-->>Post Routes: "Yes, proceed!"
-    Post Routes->>Upload Image: "Handle image upload!"
-    Upload Image-->>Post Routes: "Image processed, available in req.file!"
-    Post Routes->>Create Post: "OK, now create the post!"
-    Create Post-->>Post Routes: "Post created!"
-    Post Routes-->>Backend Server: "Response ready!"
-    Backend Server-->>MA: Success: Post created!
+    MA->>Server: POST /api/post (with text and image)
+    Server->>Auth: Is user authenticated?
+    Auth-->>Server: Yes, authenticated
+    Server->>Multer: Handle image upload
+    Multer-->>Server: Image processed (req.file ready)
+    Server->>Controller: Create the post with data
+    Controller-->>Server: Post created
+    Server-->>MA: 201 Created - Post successfully created
+
 ```
 
 **Step-by-step Explanation:**
